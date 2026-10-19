@@ -20,6 +20,28 @@ function Clients() {
       .catch((error) => console.error(error));
   }
 
+
+  //delete client from backend- pass through client id from button
+async function deleteClient(id: number) {
+
+  //await to find backend delete method - pass through client id
+    const response = await fetch(
+      `http://localhost:5001/api/clients/${id}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    if (!response.ok){
+      console.error("failed to delete")
+      return;
+    }
+
+    console.log("Deleted!")
+    //refresh client list with method call
+    getClient();
+  }
+
   useEffect(() => {
     getClient();
   }, []);
@@ -33,6 +55,8 @@ function Clients() {
           <h3>{client.name}</h3>
           <p>Age: {client.age}</p>
           <p>Weight: {client.weight}kg</p>
+          
+          <button type="button" className="btn" onClick={() => deleteClient(client.id)}>Delete</button>
         </div>
       ))}
 

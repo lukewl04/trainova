@@ -41,14 +41,21 @@ app.post("/api/clients", (req,res) =>{
   res.status(201).json({ id: result.lastInsertRowid});
 })
 
-app.get("/api/jack", (req, res) => {
-  const name = "jack"
-  const age = 24
-  const weight = 78
+//delete client from db
+app.delete("/api/clients/:id", (req,res) => {
+  //id
+  const id = Number(req.params.id);
 
+  //run sql
+  const client = db.prepare("DELETE FROM clients WHERE id ==  ?")
+  .run(id);
 
-  res.json({ name: name, age: age, weight:weight});
+  //message
+  res.json({ message: "Item deleted" });
+
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Trainova backend running on port ${PORT}`);
