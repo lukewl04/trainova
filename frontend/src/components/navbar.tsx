@@ -12,7 +12,7 @@ function MyNavbar() {
           <Nav className="me-auto">
             <Nav.Link as= {Link} to="/">Home</Nav.Link>
             <Nav.Link as= {Link} to="/clients">Clients</Nav.Link>
-            <Nav.Link href="#pricing">summet else</Nav.Link>
+            <Nav.Link as= {Link} to="/login">login</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
