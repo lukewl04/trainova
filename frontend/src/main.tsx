@@ -5,6 +5,7 @@ import './index.css'
 import Home from './pages/home.tsx'
 import Clients from './pages/clients.tsx'
 import MyNavbar from './components/navbar.tsx'
+import Login from './pages/login.tsx';
 import { BrowserRouter,Routes, Route } from 'react-router-dom';
 
 
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path ="/" element = {<Home/>}/>
           <Route path ="/clients" element = {<Clients/>}/>
+          <Route path ="/login" element = {<Login/>}/>
         </Routes>
         
     </BrowserRouter>
