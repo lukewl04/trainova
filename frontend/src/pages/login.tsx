@@ -1,8 +1,11 @@
 
 import Alert from 'react-bootstrap/Alert';
-
+import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
+
+
 function Login() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -10,6 +13,7 @@ function Login() {
       
     fetch("http://localhost:5001/api/login", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },
@@ -22,6 +26,7 @@ function Login() {
       .then((response) => response.json())
       .then((data) => {
         setMessage(data.message);
+        navigate("/clients");
       })
       .catch((error) => console.error(error));
   

@@ -11,7 +11,10 @@ const PORT = process.env.PORT || 5001;
 
 
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {
@@ -19,9 +22,13 @@ app.get("/api/health", (req, res) => {
 });
 
 
-// get all clients from db
-app.get("/api/clients", (req,res) =>{
-  const clients = db.prepare("SELECT * FROM clients").all();
+// get all clients from db - left join on user to clients from coach id so coach name is included.
+app.get("/api/clients", (req, res) => {
+  const clients = db.prepare(`
+    SELECT clients.*, user.username AS coachName
+    FROM clients
+    LEFT JOIN user ON clients.coachID = user.userid
+  `).all();
 
   res.json(clients);
 });
@@ -30,6 +37,7 @@ app.get("/api/clients", (req,res) =>{
 declare module "express-session" {
   interface SessionData {
     user: string;
+    userid: number;
   }
 }
 
@@ -62,9 +70,9 @@ app.post("/api/clients", (req,res) =>{
   }
 
   const result = db
-  .prepare ("INSERT INTO clients (name, age, weight) VALUES (?,?,?)")
-  .run(name.trim(), age ?? null, weight ?? null);
-
+  .prepare ("INSERT INTO clients (name, age, weight, coachID) VALUES (?,?,?,?)")
+  .run(name.trim(), age ?? null, weight ?? null, req.session.userid);
+  console.debug(req.session.user + " is the coach")
   res.status(201).json({ id: result.lastInsertRowid});
 })
 
@@ -82,6 +90,7 @@ app.delete("/api/clients/:id", (req,res) => {
 
 });
 
+//handle login
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
 
@@ -114,7 +123,7 @@ app.post("/api/login", (req, res) => {
 
     // Store user in session
     req.session.user = result.username;
-
+    req.session.userid = result.userid;
     // Save session
     req.session.save((error) => {
       if (error) {
@@ -132,6 +141,19 @@ app.post("/api/login", (req, res) => {
   });
 });
   
+app.get("/api/me", (req, res) => {
+  if (!req.session.userid) {
+    return res.status(401).json({
+      loggedIn: false
+    });
+  }
+
+  res.json({
+    loggedIn: true,
+    username: req.session.user,
+    userid: req.session.userid
+  });
+});
 
 
 

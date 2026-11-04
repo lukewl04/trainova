@@ -15,7 +15,8 @@ db.exec(`
     name TEXT NOT NULL,
     age INTEGER,
     weight REAL,
-    coachID INTEGER REFERENCES coaches(coachid)
+    coachID INTEGER,
+    FOREIGN KEY (coachID) REFERENCES user(userid)
   );
 `);
 console.log("Database path:", db.name);

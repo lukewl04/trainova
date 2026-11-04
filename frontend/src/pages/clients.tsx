@@ -6,6 +6,7 @@ interface Client {
   name: string;
   age: number;
   weight: number;
+  coachName: string;
 }
 
 function Clients() {
@@ -55,6 +56,7 @@ async function deleteClient(id: number) {
           <h3>{client.name}</h3>
           <p>Age: {client.age}</p>
           <p>Weight: {client.weight}kg</p>
+          <p>Coach : {client.coachName}</p>
           
           <button type="button" className="btn" onClick={() => deleteClient(client.id)}>Delete</button>
         </div>

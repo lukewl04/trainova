@@ -18,6 +18,7 @@ function AddClient({ updateClient }: AddClientProps) {
       "http://localhost:5001/api/clients",
       {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },
